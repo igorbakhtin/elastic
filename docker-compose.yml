@@ -1,0 +1,33 @@
+version: '3'
+services:
+  my-elastic-app:
+    build:
+      context: .
+    ports:
+    - "8080:8080"
+    depends_on:
+    - elastic
+#  elastic:
+#    build:
+#      context: elasticSearch
+#    container_name: elasticsearch
+#    environment:
+#      - discovery.type=single-node
+#      - node.store.allow_mmap=false
+#      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+#    ports:
+#      - 9200:9200
+#      - 9300:9300
+  elastic:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.5.2
+    ports:
+     - "9200:9200"
+    environment:
+     - discovery.type=single-node
+  hq:
+    container_name: elasticHQ
+    image: elastichq/elasticsearch-hq
+    ports:
+      - "5000:5000"
+    environment:
+      - HQ_DEFAULT_URL=http://elastic:9200
